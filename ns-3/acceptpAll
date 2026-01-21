@@ -1,0 +1,9 @@
+./src/ndnSIM/NFD/daemon/fw/unsolicited-data-policy.cpp:const std::string AdmitAllUnsolicitedDataPolicy::POLICY_NAME("admit-all");
+./src/ndnSIM/NFD/nfd.conf.sample.in:  ; Available policies are: drop-all, admit-local, admit-network, admit-all
+./src/ndnSIM/NFD/nfd.conf.sample.in:  cs_unsolicited_policy admit-all
+./src/ndnSIM/NFD/tests/daemon/fw/unsolicited-data-policy.t.cpp:  BOOST_CHECK_EQUAL(policyNames.count("admit-all"), 1);
+./src/ndnSIM/NFD/tests/daemon/mgmt/tables-config-section.t.cpp:      cs_unsolicited_policy admit-all
+./src/ndnSIM/NFD/nfd.conf.sample.in~:  ; Available policies are: drop-all, admit-local, admit-network, admit-all
+./src/ndnSIM/NFD/nfd.conf.sample.in~:  cs_unsolicited_policy admit-all
+./src/ndnSIM/model/ndn-l3-protocol.cpp:	  "  cs_unsolicited_policy drop-all\n" /* Elidio: admit-all */
+./src/ndnSIM/model/ndn-l3-protocol.cpp~:	  "  cs_unsolicited_policy admit-all\n" /* Elidio */

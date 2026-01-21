@@ -1,0 +1,4 @@
+./src/ndnSIM/helper/ndn-stack-helper.cpp:  std::string uri = "netdev://";
+./src/ndnSIM/helper/ndn-stack-helper.cpp:                                                   "netdev://[ff:ff:ff:ff:ff:ff]");
+./src/ndnSIM/helper/ndn-stack-helper.cpp~:  std::string uri = "netdev://";
+./src/ndnSIM/helper/ndn-stack-helper.cpp~:                                                   "netdev://[ff:ff:ff:ff:ff:ff]");
