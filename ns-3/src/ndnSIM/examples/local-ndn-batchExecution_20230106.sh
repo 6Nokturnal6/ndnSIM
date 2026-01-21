@@ -1,0 +1,133 @@
+#!/bin/bash
+
+#
+# Copyright (c) 2017 Orange Labs
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation;
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# Author: Rediet <getachew.redieteab@orange.com>
+#
+
+# This script runs wifi-trans-example for all combinations, plots transmitted spectra
+# using the generated .plt file and puts result png images in wifi-trans-results folder.
+#
+# Inspired from Tom's and Nicola's scripts for LAA-WiFi coexistence
+
+start_time=$(date +%s)
+
+nodeNum=10
+duration=471.00
+
+
+#Catch abort signal
+control_c()
+{
+  echo "Aborted, exiting..."
+  exit $?
+}
+trap control_c SIGINT
+
+#Save waf and script locations. Have to be run from where they are (otherwise won't find executables)
+# tmp_dir=$@
+
+# if [ -d $tmp_dir ]; then
+#   echo "$tmp_dir directory exists."
+# else
+#   mkdir -p "$tmp_dir"
+#   echo "$tmp_dir directory created."
+# fi
+
+
+# '/var/tmp/ns-3/testingVM_logs/' + RngRun_${i}_OneConsumer
+scriptDir=`pwd`
+cd ../../../
+wafDir=`pwd`
+# ${wafDir}/../../../mobility_20221217_1.tcl (~/mobility_20221217_1.tcl)
+traceFile=mobility_20230105.tcl
+logFile=ns2-mobility-trace_20221217.log
+log=log_file
+
+storage_dir="/home/dasilva/PDEEC2021/fromVM/OneConsumer10" # 2 is already executed for 4 and 40.
+cd $scriptDir
+
+#Test where script is run from
+# if test ! -f ${wafDir}/waf ; then
+#   echo "Please run this script from within the directory `dirname $0`, like this:"
+#   echo "cd `dirname $0`"
+#   echo "./`basename $0` 'tmp_dir' 'traceFile'"
+#   exit 1
+# fi
+
+
+# 	cmd.AddValue ("traceFile", "Ns2 movement trace file", traceFile);
+# 	cmd.AddValue ("nodeNum", "Number of nodes", nodeNum);
+# 	cmd.AddValue ("duration", "Duration of Simulation", duration);
+# 	cmd.AddValue ("logFile", "Log file", logFile);
+#   cmd.AddValue ("tmp_dir", "Temporary directory name", tmp_dir);
+
+
+# 	NS_GLOBAL_VALUE="RngRun=20" ./waf --run "ndn-simple-wifi3-WithBeacon_20221217 --traceFile=./mobility_20221217_1.tcl --nodeNum=48 --duration=309.00 --logFile=ns2-mobility-trace_20220831.log --command-template=./gdbString.txt" 2>&1 | tee log
+
+
+# --traceFile=/home/dasilva/mobility_20220831_2.tcl --nodeNum=15 --duration=350.00 --logFile=ns2-mobility-trace_20220831.log --command-template=/home/dasilva/PDEEC2021/testingENV/ns-3/gdbString.txt
+
+
+
+# RngRun=(10 15 20 25)
+file_to_run=ndn-simple-wifi3-WithBeacon_20221221 #19, 18
+control=0
+
+#Iteratively run simulation for all combinations
+#Legacy combinations
+cd $wafDir
+
+tmp_dir="$1"
+# storage_dir="/home/dasilva/PDEEC2021/fromVM/OneConsumer"
+for i in 4 40 60 done
+  do
+      outputDir="${storage_dir}/RngRun_${i}_OneConsumer"
+      if [ -d $outputDir ]; then
+        echo "$outputDir directory exists."
+      else
+        mkdir -p "$outputDir"
+        echo "$outputDir directory created."
+      fi
+
+#       tmp_dir=$1
+#       if [ -d $tmp_dir ]; then
+#         echo "$tmp_dir directory exists."
+#       else
+#         mkdir -p "$tmp_dir"
+#         echo "$tmp_dir directory created."
+#       fi
+
+
+      echo "==============================================="
+      echo "RngRun=\"${i}\" ./waf --run $file_to_run --tmp_dir=$tmp_dir --traceFile=$traceFile --nodeNum=$nodeNum --duration=$duration --logFile=$logFile 2>&1 | tee $log _RngRun_${i}"
+#       cd $wafDir
+      NS_GLOBAL_VALUE="RngRun=${i}" ${wafDir}/waf --run "$file_to_run --tmp_dir=$tmp_dir --traceFile=$traceFile --nodeNum=$nodeNum --duration=$duration --logFile=$logFile"
+
+
+  echo "Finished running RngRun="$i" ./waf --run $file_to_run --tmp_dir=$tmp_dir --traceFile=$traceFile --nodeNum=$nodeNum --duration=$duration --logFile=$logFile with Time=$(($(date +%s) - $start_time)) seconds" >> log_run
+
+  echo "Moving ${tmp_dir}* $outputDir" >> log_run
+  mv -v $tmp_dir/* $outputDir
+#   ((control++))
+  done
+
+echo "Finished"
+
+end_time=$(date +%s)
+
+echo "Total time elapsed: $(($end_time - $start_time)) seconds"
