@@ -1,6 +1,6 @@
 # NDN Mobility Modifications - Thesis Research
 
-This repository contains my modifications to ndnSIM for PhD research on context-aware NDN-based VANET.
+This repository contains my modifications to ndnSIM for PhD research on Context-Aware Routing Model for NDN-based VANET.
 
 ## ⚠ Important Note
 This is a **modified fork** of the original ndnSIM. It includes custom changes for mobility research.
